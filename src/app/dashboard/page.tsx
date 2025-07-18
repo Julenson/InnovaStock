@@ -9,7 +9,7 @@ import { MaterialsTable } from '@/components/materials-table';
 import type { Material } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
-import { getAllMaterials, addMaterial, updateMaterialQuantity, deleteMaterial } from '../../db/managedb'; // O usa el alias si aplica
+import { getAllMaterials, addMaterial, updateMaterialQuantity, deleteMaterial } from '../../../db/managedb'; // O usa el alias si aplica
 
 export default function DashboardPage() {
   const [materials, setMaterials] = React.useState<Material[]>([]);
@@ -59,7 +59,7 @@ export default function DashboardPage() {
     }
   };
 
-  const handleRemoveMaterial = async (materialId: string) => {
+  const handleRemoveMaterial = async (materialId: number) => {
     const materialToRemove = materials.find(m => m.id === materialId);
     if (!materialToRemove) {
       return; // Material not found in current state
@@ -86,7 +86,7 @@ export default function DashboardPage() {
     }
   };
 
-  const handleUpdateQuantity = async(materialId: string, change: number) => {
+  const handleUpdateQuantity = async(materialId: number, change: number) => {
     const materialToUpdate = materials.find(m => m.id === materialId);
     if (!materialToUpdate) {
       return; // Material not found in current state
@@ -108,7 +108,7 @@ export default function DashboardPage() {
       );
       toast({
         title: "Material Actualizado",
-        description: `$La cantidad de {updatedMaterial.name} ha sido actualizada a ${updatedMaterial.quantity}.`,
+        description: `La cantidad de ${updatedMaterial.name} ha sido actualizada a ${updatedMaterial.quantity}.`,
       });
     } catch (error) {
         console.error(`Error al actualizar la cantidad del material con ID ${materialId}:`, error);
@@ -121,7 +121,7 @@ export default function DashboardPage() {
     };
 
     if(isloading) {
-      return<div>Loading materials ...</div>;
+      return <div className="flex justify-center items-center h-full"><p>Loading materials...</p></div>;
     }
 
   return (

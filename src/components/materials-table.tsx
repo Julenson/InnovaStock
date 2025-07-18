@@ -42,8 +42,8 @@ import { formatDistanceToNow, parseISO } from 'date-fns';
 
 interface MaterialsTableProps {
   materials: Material[];
-  onRemove: (id: string) => void;
-  onUpdateQuantity: (id: string, change: number) => void;
+  onRemove: (id: number) => void;
+  onUpdateQuantity: (id: number, change: number) => void;
 }
 
 export function MaterialsTable({
@@ -85,7 +85,7 @@ export function MaterialsTable({
                 </TableCell>
                 <TableCell className="font-medium">{material.name}</TableCell>
                 <TableCell>
-                  <Badge variant="outline">{material.category}</Badge>
+                  {material.category && <Badge variant="outline">{material.category}</Badge>}
                 </TableCell>
                 <TableCell className="text-center">
                   <div className="flex items-center justify-center gap-2">
@@ -99,7 +99,7 @@ export function MaterialsTable({
                   </div>
                 </TableCell>
                 <TableCell className="hidden md:table-cell text-right">
-                  {formatDistanceToNow(parseISO(material.lastUpdated), { addSuffix: true })}
+                  {material.lastUpdated ? formatDistanceToNow(parseISO(material.lastUpdated), { addSuffix: true }) : 'N/A'}
                 </TableCell>
                 <TableCell>
                   <AlertDialog>
