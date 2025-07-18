@@ -20,8 +20,10 @@ export default function DashboardPage() {
   React.useEffect(() => {
     const fetchMaterials = async () => {
       try {
+        // Explicitly cast the result of getAllMaterials to Material[]
+        // This assumes that getAllMaterials is indeed returning data that conforms to the Material type structure.
         setIsLoading(true); // Set loading to true before fetching
-        const materialsData = await getAllMaterials();
+        const materialsData = await getAllMaterials() as Material[];
         setMaterials(materialsData);
       } catch (error) {
         console.error('Error al Traer los materiales:', error);
@@ -118,7 +120,7 @@ export default function DashboardPage() {
           variant: "destructive",
         });
       }
-    };
+  };
 
     if(isloading) {
       return <div className="flex justify-center items-center h-full"><p>Loading materials...</p></div>;
