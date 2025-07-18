@@ -12,22 +12,23 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { getAllMaterials } from '../../../db/managedb';
 
 const PredictReorderPointsInputSchema = z.object({
-  historicalUsageData: z
-    .string()
-    .describe(
-      'Historical usage data of materials, including material name, date, and quantity used.'
-    ),
+  //historicalUsageData: z
+  //  .string()
+  //  .describe(
+  //    'Historical usage data of materials, including material name, date, and quantity used.'
+  //  ),
   leadTimeDays: z
     .number()
     .describe(
-      'The typical lead time in days required to replenish each material after placing an order.'
+      'El plazo de entrega típico en días necesario para reponer cada material después de realizar un pedido.'
     ),
   desiredStockLevelDays: z
     .number()
     .describe(
-      'The desired number of days of stock to have on hand to avoid shortages.'
+      'El número deseado de días de stock a tener a mano para evitar escasez.'
     ),
 });
 export type PredictReorderPointsInput = z.infer<typeof PredictReorderPointsInputSchema>;
@@ -35,16 +36,16 @@ export type PredictReorderPointsInput = z.infer<typeof PredictReorderPointsInput
 const PredictReorderPointsOutputSchema = z.object({
   reorderSuggestions: z.array(
     z.object({
-      materialName: z.string().describe('The name of the material.'),
+      materialName: z.string().describe('El nombre del material.'),
       reorderPoint: z
         .number()
         .describe(
-          'The suggested reorder point for the material, indicating when to reorder.'
+          'El punto de reorden sugerido para el material, que indica cuándo reordenarlo.'
         ),
       reasoning: z
         .string()
         .describe(
-          'Explanation for how the reorder point was calculated, including factors considered.'
+          'Explicación de cómo se calculó el punto de reorden, incluidos los factores considerados.'
         ),
     })
   ),
@@ -61,25 +62,23 @@ const prompt = ai.definePrompt({
   name: 'predictReorderPointsPrompt',
   input: {schema: PredictReorderPointsInputSchema},
   output: {schema: PredictReorderPointsOutputSchema},
-  prompt: `You are an AI assistant specializing in inventory management and supply chain optimization.
+  prompt: `Eres un asistente de IA especializado en la gestión de inventario y la optimización de la cadena de suministro.
 
-  Analyze the historical usage data of materials to determine optimal reorder points. 
-  Consider the lead time for replenishment and the desired stock levels to avoid shortages.
+  Analiza el historial de uso de materiales para determinar los puntos de reorden óptimos.
+  Considera el plazo de reposición y los niveles de stock deseados para evitar la escasez.
 
-  Historical Usage Data: {{{historicalUsageData}}}
-  Lead Time (Days): {{{leadTimeDays}}}
-  Desired Stock Level (Days): {{{desiredStockLevelDays}}}
+  Datos históricos de uso: {{{historicalUsageData}}}
+  Plazo de entrega (días): {{{leadTimeDays}}}
+  Nivel de stock deseado (días): {{{desiredStockLevelDays}}}
 
-  Based on this information, provide reorder point suggestions for each material. 
-  Include the material name, the suggested reorder point (quantity), and a brief explanation 
-  of how the reorder point was calculated.
+  Con base en esta información, proporciona sugerencias de puntos de reorden para cada material.
+  Incluye el nombre del material, el punto de reorden sugerido (cantidad) y una breve explicación de cómo se calculó.
 
-  Ensure that your recommendations are practical and aimed at minimizing stockouts while avoiding excessive inventory.
+  Asegúrate de que tus recomendaciones sean prácticas y estén orientadas a minimizar la falta de existencias, evitando un inventario excesivo.
 
-  Format your reorder point suggestions as a JSON array of objects, where each object includes:
-  - materialName (string): The name of the material.
-  - reorderPoint (number): The suggested reorder point for the material.
-  - reasoning (string): Explanation for how the reorder point was calculated.
+  Formatea tus sugerencias de puntos de reorden como una matriz JSON de objetos, donde cada objeto incluye:
+  - materialName (cadena): El nombre del material.
+  - reorderPoint (número): El punto de reorden sugerido para el material. - razonamiento (cadena): Explicación de cómo se calculó el punto de reorden.
   `,
 });
 
@@ -90,7 +89,16 @@ const predictReorderPointsFlow = ai.defineFlow(
     outputSchema: PredictReorderPointsOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
+    const materials = await getAllMaterials();
+    const historicalUsageDataString = materials.map(m =>
+      `Material: ${m.name}, Cantidad: ${m.quantity}`
+    )
+    const pomptInput = {
+      historicalUsageData: historicalUsageDataString,
+      leadTimeDays: input.leadTimeDays,
+      desiredStockLevelDays: input.desiredStockLevelDays,
+    };
+    const {output} = await prompt(pomptInput);
     return output!;
   }
 );
