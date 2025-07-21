@@ -1,8 +1,12 @@
-//db/db.ts
+//db/managedb.ts
 import { neon } from '@netlify/neon';
 import { Material } from '../src/lib/types';
 
+console.log('Initializing Neon...');
 const sql = neon();
+console.log('Neon initialized.');
+
+//export async function setAdmins()
 
 export async function getAllMaterials() {
     try {
@@ -65,6 +69,65 @@ export async function getAllMaterials() {
       await sql`DELETE FROM materials WHERE id = ${id}`;
     } catch (error) {
       console.error(`Error deleting material with ID ${id}:`, error);
+      throw error;
+    }
+  }
+
+  export async function getUserByEmail(email: string) {
+    try{
+      await sql`SELECT FROM users WHERE email = ${email}:`;
+    } catch (error) {
+      console.error(`Error fetching user with email ${email}:`, error);
+      throw error;
+    }
+  }
+
+  export async function getUser(email: string, password: string) {
+    try {
+      await sql`SELECT FROM users WHERE email = ${email} AND password = ${password}`;
+    } catch (error) {
+      console.error(`Error fetching user with email ${email}:`, error);
+      throw error;
+    }
+  }
+
+  export async function createUser(authenticatedUserCategory: string, email: string, password: string, category: string) {
+    // Check if the authenticated user is an admin
+    if (authenticatedUserCategory !== 'admin') {
+      throw new Error('Unauthorized: Only admins can create users.');
+    }
+  
+    try {
+      await sql`INSERT INTO users (email, password, category) VALUES (${email}, ${password}, ${category})`;
+    } catch (error) {
+      console.error(`Error creating user with email ${email}:`, error);
+      throw error;
+    }
+  }
+
+  export async function updatePassword(email: string, password: string) {
+    try {
+      await sql`UPDATE users SET password = ${password} WHERE email = ${email}`;
+    } catch (error) {
+      console.error(`Error updating user with email ${email}:`, error);
+      throw error;
+    }
+  }
+
+  export async function deleteUser(email: string) {
+    try {
+      await sql`DELETE FROM users WHERE email = ${email}`;
+    } catch (error) {
+      console.error(`Error deleting user with email ${email}:`, error);
+      throw error;
+    }
+  }
+
+  export async function getAllUsers() {
+    try {
+      await sql`SELECT FROM users`;
+    } catch (error) {
+      console.error(`Error fetching all users:`, error);
       throw error;
     }
   }

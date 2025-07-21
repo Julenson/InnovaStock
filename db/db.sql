@@ -8,3 +8,12 @@ CREATE TABLE materials (
     category VARCHAR(255),
     quantity INTEGER NOT NULL DEFAULT 0
 );
+
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    mail VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    category VARCHAR(255)
+);
+
+)

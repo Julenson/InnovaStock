@@ -7,6 +7,8 @@
   packages = [
     pkgs.nodejs_20
     pkgs.zulu
+    pkgs.netlify-cli
+    pkgs.postgresql
   ];
   # Sets environment variables in the workspace
   env = {};

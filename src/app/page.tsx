@@ -29,13 +29,13 @@ export default function LoginPage() {
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
       <div className="mb-8 flex items-center gap-2 text-2xl font-bold text-primary">
         <InnovaTrackLogo className="h-8 w-8" />
-        <h1 className="font-headline">InnovaTrack</h1>
+        <h1 className="font-headline">Innova-Sport</h1>
       </div>
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account.
+            Introduce tu email para iniciar sesion.
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleLogin}>
