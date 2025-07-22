@@ -174,13 +174,3 @@ export async function getAllUsers(): Promise<User[]> {
     throw error;
   }
 }
-
-let databaseInitialized = false;
-
-async function initializeIfNeeded() {
-  if (databaseInitialized) return;
-  databaseInitialized = true;
-  await initDatabase();
-}
-
-initializeIfNeeded().catch(console.error); // Se ejecuta automáticamente al importar
