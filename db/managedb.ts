@@ -40,8 +40,6 @@ export async function initDatabase() {
   console.log('Database initialized.');
 }
 
-initDatabase();
-
 export async function getAllMaterials(): Promise<Material[]> {
   try {
     const materials = await sql`SELECT id, name, category, quantity FROM materials`;
@@ -176,3 +174,13 @@ export async function getAllUsers(): Promise<User[]> {
     throw error;
   }
 }
+
+let databaseInitialized = false;
+
+async function initializeIfNeeded() {
+  if (databaseInitialized) return;
+  databaseInitialized = true;
+  await initDatabase();
+}
+
+initializeIfNeeded().catch(console.error); // Se ejecuta automáticamente al importar
