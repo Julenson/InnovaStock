@@ -1,14 +1,14 @@
 // db/managedb.ts
-import { neon } from '@netlify/neon';
+import sql from '@lib/neon';  // Importamos el cliente compartido
 import type { Material, User } from '../types';
 
 console.log('Initializing Neon...');
-const sql = neon(process.env.NETLIFY_DATABASE_URL);
-console.log('Neon initialized.');
+// Ya no inicializamos aquí, porque el cliente viene de lib/neon.ts
+// console.log('Neon initialized.');
 
 export async function getPostById(postId: number) {
   const result = await sql`SELECT * FROM posts WHERE id = ${postId}`;
-  const [post] = result as any[];  // Cast aquí, por ahora any[]
+  const [post] = result as any[];  // Puedes afinar tipos luego
   return post;
 }
 
@@ -21,7 +21,6 @@ export async function initDatabase() {
       quantity INTEGER NOT NULL DEFAULT 0
     );
   `;
-  //await sql`DROP TABLE IF EXISTS users;`
 
   await sql`
     CREATE TABLE IF NOT EXISTS users (
@@ -33,9 +32,10 @@ export async function initDatabase() {
   `;
 
   await sql`
-  INSERT INTO users (email,password)
-  VALUES ('demo@innovasport.com', 'demopassword')
-  ON CONFLICT (email) DO NOTHING`
+    INSERT INTO users (email,password)
+    VALUES ('demo@innovasport.com', 'demopassword')
+    ON CONFLICT (email) DO NOTHING
+  `;
 
   console.log('Database initialized.');
 }
