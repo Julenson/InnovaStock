@@ -28,11 +28,13 @@ export async function initDatabase() {
       email VARCHAR(255) NOT NULL,
       password VARCHAR(255) NOT NULL,
       category VARCHAR(255),
-      INSERT INTO users (mail, password)
-      VALUES ('demo@innovasport.com', 'demopassword')
-      ON CONFLICT (mail) DO NOTHING;
     );
   `;
+
+  await sql`
+  INSERT INTO users (email,password)
+  VALUES (demo@innovasport.com,demopassword)
+  ON CONFLICT (email) DO NOTHING`
 
   console.log('Database initialized.');
 }
