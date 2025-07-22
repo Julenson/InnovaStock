@@ -21,6 +21,7 @@ export async function initDatabase() {
       quantity INTEGER NOT NULL DEFAULT 0
     );
   `;
+  //await sql`DROP TABLE IF EXISTS users;`
 
   await sql`
     CREATE TABLE IF NOT EXISTS users (
