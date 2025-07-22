@@ -2,7 +2,7 @@
 import sql from '@lib/neon';  // Importamos el cliente compartido
 import type { Material, User } from '../types';
 
-console.log('Initializing Neon...');
+//console.log('Initializing Neon...');
 // Ya no inicializamos aquí, porque el cliente viene de lib/neon.ts
 // console.log('Neon initialized.');
 
@@ -37,7 +37,7 @@ export async function initDatabase() {
     ON CONFLICT (email) DO NOTHING
   `;
 
-  console.log('Database initialized.');
+  //console.log('Database initialized.');
 }
 
 export async function getAllMaterials(): Promise<Material[]> {

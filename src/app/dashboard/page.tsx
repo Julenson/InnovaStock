@@ -1,6 +1,7 @@
+// src/app/dashboard/page.tsx
 'use client';
 
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { PlusCircle, BrainCircuit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AddMaterialDialog } from '@/components/add-material-dialog';
@@ -8,51 +9,51 @@ import { PredictReorderDialog } from '@/components/predict-reorder-dialog';
 import { MaterialsTable } from '@/components/materials-table';
 import type { Material } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
-import { format } from 'date-fns';
-import { getAllMaterials, addMaterial, updateMaterialQuantity, deleteMaterial } from '../../../db/managedb'; // O usa el alias si aplica
 
 export default function DashboardPage() {
-  const [materials, setMaterials] = React.useState<Material[]>([]);
-  const [isloading, setIsLoading] = React.useState(true);
-  const [isAddDialogOpen, setIsAddDialogOpen] = React.useState(false);
+  const [materials, setMaterials] = useState<Material[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const { toast } = useToast();
 
-  React.useEffect(() => {
-    const fetchMaterials = async () => {
+  // Fetch materials from API route
+  useEffect(() => {
+    async function fetchMaterials() {
+      setIsLoading(true);
       try {
-        // Explicitly cast the result of getAllMaterials to Material[]
-        // This assumes that getAllMaterials is indeed returning data that conforms to the Material type structure.
-        setIsLoading(true); // Set loading to true before fetching
-        const materialsData = await getAllMaterials() as Material[];
-        setMaterials(materialsData);
+        const res = await fetch('/api/materials');
+        if (!res.ok) throw new Error('Error fetching materials');
+        const data = await res.json();
+        setMaterials(data);
       } catch (error) {
-        console.error('Error al Traer los materiales:', error);
         toast({
           title: "Error",
-          description: "Error al cargar los materiales. Pro favor vuelve a intentarlo.",
+          description: "Error al cargar los materiales. Por favor vuelve a intentarlo.",
           variant: "destructive",
         });
       } finally {
-        setIsLoading(false); // Set loading to false after fetching (either success or error)
+        setIsLoading(false);
       }
-    };
+    }
     fetchMaterials();
-  }, []);
+  }, [toast]);
 
+  // Add material using API
   const handleAddMaterial = async (newMaterialData: Omit<Material, 'id' | 'lastUpdated'>) => {
     try {
-      // Call the addMaterial function from your managedb.ts
-      const addedMaterial = await addMaterial(newMaterialData.name, newMaterialData.category, newMaterialData.quantity);
-
-      // Update the state with the newly added material from the database (includes the generated ID)
+      const res = await fetch('/api/materials', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newMaterialData),
+      });
+      if (!res.ok) throw new Error('Error adding material');
+      const addedMaterial = await res.json();
       setMaterials(prev => [addedMaterial, ...prev]);
-
       toast({
         title: "Material Añadido",
         description: `${addedMaterial.name} ha sido añadido al inventario.`,
       });
     } catch (error) {
-      console.error('Error al añadir el material:', error);
       toast({
         title: "Error",
         description: "Error al añadir el material. Por favor vuelve a intentarlo.",
@@ -61,70 +62,61 @@ export default function DashboardPage() {
     }
   };
 
+  // Delete material using API
   const handleRemoveMaterial = async (materialId: number) => {
-    const materialToRemove = materials.find(m => m.id === materialId);
-    if (!materialToRemove) {
-      return; // Material not found in current state
-    }
     try {
-      // Call the deleteMaterial function from your managedb.ts
-      await deleteMaterial(materialId);
-
-      // Update the state by removing the material
+      const res = await fetch('/api/materials', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: materialId }),
+      });
+      if (!res.ok) throw new Error('Error deleting material');
       setMaterials(prev => prev.filter(m => m.id !== materialId));
-
       toast({
         title: "Material Eliminado",
-        description: `${materialToRemove.name} ha sido eliminado.`,
+        description: `Material eliminado.`,
         variant: "destructive",
       });
     } catch (error) {
-      console.error(`Error al eliminar el material ${materialId}:`, error);
       toast({
         title: "Error",
-        description: "Error al eliminar el material. Por favor Vuelve a intentarlo",
+        description: "Error al eliminar el material. Por favor vuelve a intentarlo.",
         variant: "destructive",
       });
     }
   };
 
-  const handleUpdateQuantity = async(materialId: number, change: number) => {
+  // Update quantity using API
+  const handleUpdateQuantity = async (materialId: number, change: number) => {
     const materialToUpdate = materials.find(m => m.id === materialId);
-    if (!materialToUpdate) {
-      return; // Material not found in current state
-    }
-
+    if (!materialToUpdate) return;
     const newQuantity = Math.max(0, materialToUpdate.quantity + change);
 
     try {
-      // Call the updateMaterialQuantity function from your managedb.ts
-      const updatedMaterial = await updateMaterialQuantity(materialId, newQuantity);
-
-      // Update the state with the updated material data from the database
-      setMaterials(prev =>
-        prev.map(m =>
-          m.id === materialId
-            ? updatedMaterial // Use the updated material data from the database
-            : m
-        )
-      );
+      const res = await fetch('/api/materials', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: materialId, quantity: newQuantity }),
+      });
+      if (!res.ok) throw new Error('Error updating material');
+      const updatedMaterial = await res.json();
+      setMaterials(prev => prev.map(m => (m.id === materialId ? updatedMaterial : m)));
       toast({
         title: "Material Actualizado",
         description: `La cantidad de ${updatedMaterial.name} ha sido actualizada a ${updatedMaterial.quantity}.`,
       });
     } catch (error) {
-        console.error(`Error al actualizar la cantidad del material con ID ${materialId}:`, error);
-        toast({
-          title: "Error",
-          description: "Error al actualizar la cantidad del material. Por favor Vuelve a intentarlo",
-          variant: "destructive",
-        });
-      }
+      toast({
+        title: "Error",
+        description: "Error al actualizar la cantidad del material. Por favor vuelve a intentarlo.",
+        variant: "destructive",
+      });
+    }
   };
 
-    if(isloading) {
-      return <div className="flex justify-center items-center h-full"><p>Loading materials...</p></div>;
-    }
+  if (isLoading) {
+    return <div className="flex justify-center items-center h-full"><p>Loading materials...</p></div>;
+  }
 
   return (
     <>
