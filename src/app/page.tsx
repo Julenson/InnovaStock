@@ -1,5 +1,6 @@
 'use client';
 
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
@@ -12,17 +13,40 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { InnovaTrackLogo } from '@/components/icons';
 import { Mail, Lock } from 'lucide-react';
+import { InnovaTrackLogo } from '@/components/icons';
 
 export default function LoginPage() {
   const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real application, you would handle authentication here.
-    // For this example, we'll just redirect to the dashboard.
-    router.push('/dashboard');
+    setError(null); // limpiar error previo
+
+    const form = e.currentTarget as HTMLFormElement;
+    const formData = new FormData(form);
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
+    try {
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data.error || 'Error desconocido');
+        return;
+      }
+
+      // Login correcto, redirigir
+      router.push('/dashboard');
+    } catch (err) {
+      setError('Error en la conexión');
+    }
   };
 
   return (
@@ -35,7 +59,7 @@ export default function LoginPage() {
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>
-            Introduce tu email para iniciar sesion.
+            Introduce tu email para iniciar sesión.
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleLogin}>
@@ -46,6 +70,7 @@ export default function LoginPage() {
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="email"
+                  name="email"
                   type="email"
                   placeholder="m@example.com"
                   required
@@ -58,15 +83,21 @@ export default function LoginPage() {
               <Label htmlFor="password">Password</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input 
-                  id="password" 
-                  type="password" 
-                  required 
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  required
                   className="pl-10"
                   defaultValue="demopassword"
                 />
               </div>
             </div>
+            {error && (
+              <p className="text-red-600 text-sm mt-2">
+                {error}
+              </p>
+            )}
           </CardContent>
           <CardFooter>
             <Button type="submit" className="w-full">
