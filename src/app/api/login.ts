@@ -1,6 +1,7 @@
 // src/app/api/login.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getUser } from '@db/managedb';
+import { NextResponse } from '@genkit-ai/next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -15,11 +16,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const user = await getUser(email, password);
     if (!user) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      console.log('Invalid credentials');
+      return NextResponse.json({ error: 'Credenciales inválidas' }, { status: 401 });
     }
-    // Aquí podrías crear sesión, JWT, cookies, etc. según tu auth strategy
-    return res.status(200).json({ message: 'Login successful', user });
+
+    console.log('User found:', user.mail);
+    return NextResponse.json({ message: 'Login correcto' });
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    console.error('Login error:', error);
+    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
   }
 }
