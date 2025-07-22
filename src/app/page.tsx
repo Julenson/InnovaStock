@@ -12,8 +12,8 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { InnovaTrackLogo } from '@/components/icons';
 import { Mail, Lock } from 'lucide-react';
-import { InnovaSportLogo } from '@/components/icons';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -28,7 +28,7 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
       <div className="mb-8 flex items-center gap-2 text-2xl font-bold text-primary">
-        <InnovaSportLogo className="h-8 w-8" />
+        <InnovaTrackLogo className="h-8 w-8" />
         <h1 className="font-headline">Innova-Sport</h1>
       </div>
       <Card className="w-full max-w-sm">
