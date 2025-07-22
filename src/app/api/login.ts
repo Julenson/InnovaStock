@@ -1,26 +1,19 @@
-// src/app/api/login.ts
-import type { NextApiRequest, NextApiResponse } from 'next';
 import { getUser } from '@db/managedb';
-import { NextResponse } from '@genkit-ai/next';
+import { NextResponse } from 'next/server';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-  
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({ error: 'Missing email or password' });
-  }
-
+export async function POST(request: Request) {
   try {
+    const { email, password } = await request.json();
+
+    if (!email || !password) {
+      return NextResponse.json({ error: 'Missing email or password' }, { status: 400 });
+    }
+
     const user = await getUser(email, password);
     if (!user) {
-      console.log('Invalid credentials');
       return NextResponse.json({ error: 'Credenciales inválidas' }, { status: 401 });
     }
 
-    console.log('User found:', user.mail);
     return NextResponse.json({ message: 'Login correcto' });
   } catch (error) {
     console.error('Login error:', error);
