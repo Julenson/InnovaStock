@@ -33,7 +33,7 @@ export async function initDatabase() {
 
   await sql`
   INSERT INTO users (email,password)
-  VALUES (demo@innovasport.com,demopassword)
+  VALUES ('demo@innovasport.com', 'demopassword')
   ON CONFLICT (email) DO NOTHING`
 
   console.log('Database initialized.');
