@@ -93,12 +93,6 @@ export default {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
-      "devDependencies": {
-      // ... other dev dependencies
-      "tailwindcss": "^x.x.x", // Replace x.x.x with the desired version
-      "postcss": "^x.x.x", // Make sure postcss and autoprefixer are also there
-      "autoprefixer": "^x.x.x"
-    }
     },
   },
   plugins: [require('tailwindcss-animate')],
