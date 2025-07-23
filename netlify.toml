@@ -1,9 +1,9 @@
 [build]
-  command = "npm ci && npm run build"
+  command = "npm run build"
   publish = ".next"
 
 [dev]
   command = "npm run dev"
   port = 8888
-  targetPort = 9002
+  targetPort = 3000
   framework = "next"
