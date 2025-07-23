@@ -50,14 +50,19 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
-      <div className="mb-8 flex items-center gap-2 text-2xl font-bold text-primary">
-        <InnovaTrackLogo className="h-8 w-8" />
-        <h1 className="font-headline">Innova-Sport</h1>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4 font-body">
+      <div className="mb-8 flex flex-col items-center gap-4 text-center">
+        <InnovaTrackLogo className="h-16 w-16" />
+        <div>
+          <h1 className="text-4xl font-bold tracking-tight text-primary font-headline">
+            Innova-Sport
+          </h1>
+          <p className="text-muted-foreground">Inventory Management</p>
+        </div>
       </div>
-      <Card className="w-full max-w-sm">
+      <Card className="w-full max-w-sm border-2 border-primary/10 shadow-lg">
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardTitle className="text-2xl">Bienvenido</CardTitle>
           <CardDescription>
             Introduce tu email para iniciar sesión.
           </CardDescription>
@@ -94,7 +99,7 @@ export default function LoginPage() {
               </div>
             </div>
             {error && (
-              <p className="text-red-600 text-sm mt-2">
+              <p className="text-destructive text-sm mt-2">
                 {error}
               </p>
             )}
@@ -106,8 +111,8 @@ export default function LoginPage() {
           </CardFooter>
         </form>
       </Card>
-      <p className="mt-4 text-center text-sm text-muted-foreground">
-        Built for Innova-Sport
+      <p className="mt-8 text-center text-sm text-muted-foreground">
+        &copy; 2024 Innova-Sport. All Rights Reserved.
       </p>
     </div>
   );

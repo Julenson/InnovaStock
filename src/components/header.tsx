@@ -3,9 +3,10 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
-  Package2,
   LogOut,
   User,
+  Settings,
+  LifeBuoy,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -29,14 +30,14 @@ export default function Header() {
           href="/dashboard"
           className="flex items-center gap-2 text-lg font-semibold md:text-base"
         >
-          <InnovaTrackLogo className="h-6 w-6 text-primary" />
+          <InnovaTrackLogo className="h-8 w-8 text-primary" />
           <span className="sr-only">InnovaTrack</span>
         </Link>
         <Link
           href="/dashboard"
-          className="text-foreground transition-colors hover:text-foreground font-bold"
+          className="text-foreground transition-colors hover:text-foreground font-bold text-lg"
         >
-          InnovaTrack
+          Innova-Sport
         </Link>
       </nav>
       {/* Mobile menu can be added here if needed */}
@@ -54,8 +55,14 @@ export default function Header() {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem disabled>Settings</DropdownMenuItem>
-            <DropdownMenuItem disabled>Support</DropdownMenuItem>
+            <DropdownMenuItem disabled>
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Settings</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem disabled>
+              <LifeBuoy className="mr-2 h-4 w-4" />
+              <span>Support</span>
+              </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => router.push('/')}>
               <LogOut className="mr-2 h-4 w-4" />
