@@ -8,7 +8,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -43,7 +42,6 @@ export default function LoginPage() {
         return;
       }
 
-      // Login correcto, redirigir
       router.push('/dashboard');
     } catch (err) {
       setError('Error en la conexión');
@@ -51,68 +49,63 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4 font-body">
-      <div className="mb-6 flex flex-col items-center text-center">
-        <InnovaSportLogo className="h-20 w-20 text-primary" />
-        <h1 className="mt-4 text-4xl font-bold tracking-tight text-primary font-headline">
-          Innova-Sport
-        </h1>
-        <p className="text-muted-foreground">Inventory Management</p>
+    <div className="w-full lg:grid lg:min-h-screen lg:grid-cols-2 xl:min-h-screen">
+      <div className="hidden bg-primary lg:flex lg:flex-col lg:items-center lg:justify-center lg:p-10">
+        <div className="flex items-center text-primary-foreground">
+           <InnovaSportLogo className="h-24 w-24" />
+        </div>
+        <div className="mt-6 text-center">
+            <h1 className="text-4xl font-bold text-primary-foreground tracking-tighter">Innova-Sport</h1>
+            <p className="mt-2 text-lg text-primary-foreground/80">Inventory Management</p>
+        </div>
+         <p className="mt-auto text-sm text-primary-foreground/60">
+          &copy; 2024 Innova-Sport. All Rights Reserved.
+        </p>
       </div>
-      <Card className="w-full max-w-sm border-2 border-primary/10 shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-2xl">Bienvenido</CardTitle>
-          <CardDescription>
-            Introduce tu email para iniciar sesión.
-          </CardDescription>
-        </CardHeader>
-        <form onSubmit={handleLogin}>
-          <CardContent className="grid gap-4">
+      <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto grid w-[350px] gap-6">
+          <div className="grid gap-2 text-center">
+            <h1 className="text-3xl font-bold text-primary">Bienvenido</h1>
+            <p className="text-balance text-muted-foreground">
+              Introduce tu email para acceder a tu inventario.
+            </p>
+          </div>
+          <form onSubmit={handleLogin} className="grid gap-4">
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  required
-                  className="pl-10"
-                  defaultValue="demo@innovasport.com"
-                />
-              </div>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="m@example.com"
+                required
+                defaultValue="demo@innovasport.com"
+              />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  required
-                  className="pl-10"
-                  defaultValue="demopassword"
-                />
+              <div className="flex items-center">
+                <Label htmlFor="password">Password</Label>
+                {/* Optional: Add "Forgot password?" link here */}
               </div>
+              <Input 
+                id="password" 
+                name="password" 
+                type="password" 
+                required 
+                defaultValue="demopassword"
+              />
             </div>
-            {error && (
-              <p className="text-destructive text-sm mt-2">
+             {error && (
+              <p className="text-destructive text-sm font-medium">
                 {error}
               </p>
             )}
-          </CardContent>
-          <CardFooter>
             <Button type="submit" className="w-full">
-              Sign in
+              Iniciar Sesión
             </Button>
-          </CardFooter>
-        </form>
-      </Card>
-      <p className="mt-8 text-center text-sm text-muted-foreground">
-        &copy; 2024 Innova-Sport. All Rights Reserved.
-      </p>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }
