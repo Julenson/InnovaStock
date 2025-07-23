@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -18,7 +19,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { InnovaTrackLogo } from './icons';
+import { InnovaSportLogo } from './icons';
 
 export default function Header() {
   const router = useRouter();
@@ -30,8 +31,8 @@ export default function Header() {
           href="/dashboard"
           className="flex items-center gap-2 text-lg font-semibold md:text-base"
         >
-          <InnovaTrackLogo className="h-8 w-8 text-primary" />
-          <span className="sr-only">InnovaTrack</span>
+          <InnovaSportLogo className="h-8 w-8 text-primary" />
+          <span className="sr-only">Innova-Sport</span>
         </Link>
         <Link
           href="/dashboard"

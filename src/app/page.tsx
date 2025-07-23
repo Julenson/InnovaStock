@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState } from 'react';
@@ -14,7 +15,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Mail, Lock } from 'lucide-react';
-import { InnovaTrackLogo } from '@/components/icons';
+import { InnovaSportLogo } from '@/components/icons';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -51,14 +52,12 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4 font-body">
-      <div className="mb-8 flex flex-col items-center gap-4 text-center">
-        <InnovaTrackLogo className="h-16 w-16" />
-        <div>
-          <h1 className="text-4xl font-bold tracking-tight text-primary font-headline">
-            Innova-Sport
-          </h1>
-          <p className="text-muted-foreground">Inventory Management</p>
-        </div>
+      <div className="mb-6 flex flex-col items-center text-center">
+        <InnovaSportLogo className="h-20 w-20 text-primary" />
+        <h1 className="mt-4 text-4xl font-bold tracking-tight text-primary font-headline">
+          Innova-Sport
+        </h1>
+        <p className="text-muted-foreground">Inventory Management</p>
       </div>
       <Card className="w-full max-w-sm border-2 border-primary/10 shadow-lg">
         <CardHeader>
